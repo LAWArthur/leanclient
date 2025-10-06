@@ -1,0 +1,10 @@
+name = "lean_backend"
+version = "0.1.0"
+defaultTargets = ["lean_backend"]
+
+[[lean_lib]]
+name = "LeanBackend"
+
+[[lean_exe]]
+name = "lean_backend"
+root = "Main"
