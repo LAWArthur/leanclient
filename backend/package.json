@@ -1,0 +1,26 @@
+{
+  "name": "leanclient-backend",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc --outdir dist/",
+    "pkg": "pkg . --output=build/leanclient.exe"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "pkg": "^5.8.1"
+  },
+  "dependencies": {
+    "vscode-jsonrpc": "^8.2.1"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "targets": [
+      "node16-win-x64"
+    ]
+  },
+  "bin": "dist/main.js",
+  "description": "",
+  "keywords": [],
+  "author": ""
+}

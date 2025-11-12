@@ -2,6 +2,7 @@
   "name": "leanclient",
   "version": "0.1.0",
   "private": true,
+  "workspaces": ["scopes_plugin", "backend"],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
@@ -9,6 +10,8 @@
   "dependencies": {
     "@types/three": "^0.156.0",
     "antlr4": "^4.13.2",
+    "axios": "^1.13.2",
+    "element-plus": "^2.11.7",
     "elkjs": "^0.8.2",
     "patch-package": "^8.0.0",
     "rete": "^2.0.6",
@@ -18,16 +21,13 @@
     "rete-connection-plugin": "^2.0.5",
     "rete-context-menu-plugin": "^2.0.6",
     "rete-render-utils": "^2.0.3",
-    "rete-scopes-plugin": "file:../scopes-plugin/dist/rete-scopes-plugin-2.1.1.tgz",
+    "rete-scopes-plugin": "*",
     "rete-vue-plugin": "^2.1.2",
     "sass": "^1.90.0",
     "sass-loader": "^16.0.5",
     "three": "^0.156.1",
     "uuid": "^13.0.0",
-    "vscode-jsonrpc": "^8.2.1",
-    "vscode-languageserver-protocol": "^3.17.5",
     "vue": "^3.2.13",
-    "web-worker": "^1.5.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {

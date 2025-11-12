@@ -1,10 +1,14 @@
 name = "lean_backend"
 version = "0.1.0"
-defaultTargets = ["lean_backend"]
+defaultTargets = ["LeanBackend"]
 
 [[lean_lib]]
 name = "LeanBackend"
 
+[[lean_lib]]
+name = "TestLib"
+
 [[lean_exe]]
 name = "lean_backend"
 root = "Main"
+supportInterpreter = true

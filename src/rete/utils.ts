@@ -4,6 +4,8 @@ import { FixedSize, Schemes, Node } from "./types";
 import { ProofSocket, TargetSocket, PropSocket, Socket } from "./sockets";
 import { NodeView } from "rete-area-plugin";
 import { Connection } from "./connection";
+import { ParentNode } from "./nodes/basic";
+import { ContextId } from "./servertypes";
 
 type Input = ClassicPreset.Input<Socket>;
 type Output = ClassicPreset.Output<Socket>;
@@ -140,4 +142,15 @@ export function getAncestorAtScope(editor: NodeEditor<Schemes>, nodeId: NodeId, 
     node = editor.getNode(node.parent);
   }
   return node!.id;
+}
+
+export function getCurrentContext(editor: NodeEditor<Schemes>, nodeId: NodeId, rootCtx: ContextId) : ContextId {
+  let node = editor.getNode(nodeId);
+  while(node?.parent) {
+    node = editor.getNode(node.parent);
+    if(node instanceof ParentNode){
+      return node.contextId!;
+    }
+  }
+  return rootCtx;
 }

@@ -1,13 +1,14 @@
 import { ClassicPreset as Classic, ClassicPreset, type GetSchemes, NodeEditor } from 'rete';
-import { ProofSocket, PropSocket, TargetSocket } from '../sockets';
+import { ProofSocket, PropSocket, Socket, TargetSocket } from '../sockets';
 import { Node } from './node';
 import { sortByIndex } from '../utils';
 import { Schemes } from '../types';
+import { ContextId, LemmaData, NodeInfo, ProofGraphInfo, ReduceData } from '../servertypes';
 
 export class ReductionNode extends Node {
 
   constructor() {
-    super('Reduction');
+    super('Reduce', '分离/实例化');
 
     this.width = 180;
     this.height = 160;
@@ -17,34 +18,19 @@ export class ReductionNode extends Node {
     this.addOutput('Result', new Classic.Output(new ProofSocket(), "Result"));
   }
 
-  onConnectionChange(socket: Classic.Socket): boolean {
-    const sortedInput = sortByIndex(Object.entries(this.inputs) as any);
-    let index = sortedInput.findLastIndex((inp) => inp[1].socket.isConnected);
-    index = index < 0 ? 0 : index;
-    if(index + 1 < sortedInput.length){
-      (sortedInput[index + 1][1].socket as ProofSocket).isOptional = true;
-      sortedInput.slice(index + 2, ).forEach(([ key, input ]) => this.removeInput(key));
-    }
-    else {
-      this.addInput(`input${index + 1}`, new Classic.Input(new ProofSocket(true), `α${index + 1}`));
-    }
-    sortedInput.slice(1, index + 1).forEach(([key, input]) => (input.socket as ProofSocket).isOptional = false);
-
-    this.height = 88 + 36 * Object.values(this.inputs).length;
-
-    return true;
-  }
-
-  code(): string {
-    const sortedInput = sortByIndex(Object.entries(this.inputs) as any);
-    return `have #output,Result := #input,func` + sortedInput.slice(1, -1).map(i => " #input," + i[0]).join("");
+  protected onReceiveData(data: ReduceData, pgInfo: ProofGraphInfo): void {
+      data.synthesize.forEach((b, idx) => {
+        if(this.hasInput(idx.toString())){
+            (this.inputs[idx.toString()]?.socket as Socket).isOptional = b;
+        }
+      })
   }
 }
 
 export class ApplyNode extends Node {
 
   constructor() {
-    super('Apply');
+    super('Apply', '逆向推理');
 
     this.width = 180;
     this.height = 195;
@@ -54,19 +40,17 @@ export class ApplyNode extends Node {
     this.addInput('input2', new Classic.Input(new TargetSocket(), 'α2'));
     this.addOutput('Result', new Classic.Output(new TargetSocket(), "Result"));
   }
-
-  code(): string {
-    return "apply #input,func";
-  }
 }
 
-export class TargetNode extends Node {
+export class OutputNode extends Node {
     canChangeParent: boolean = false;
+    doNotAdd: boolean = true;
+
     constructor() {
-        super('Target');
+        super('Output', '结论');
 
         this.width = 180;
-        this.height = 195;
+        this.height = 0;
 
         this.addInput(`target`, new Classic.Input(new TargetSocket(), "├"));
     }
@@ -74,49 +58,74 @@ export class TargetNode extends Node {
 
 export class InputNode extends Node {
     canChangeParent: boolean = false;
+    doNotAdd: boolean = true;
 
     constructor() {
-        super('Input');
+        super('Input', '前提');
 
         this.width = 180;
-        this.height = 195;
+        this.height = 0;
 
         this.addOutput(`Test`, new Classic.Output(new ProofSocket(), "Test"));
     }
 }
 
 export class ParentNode extends Node {
-    canChangeParent: boolean = true;
-    hasSubflow: boolean = true;
+    contextId?: string;
+    inputNode!: InputNode
+    outputNode!: OutputNode
 
-    constructor(name: string) {
-        super(name);
+    constructor(type: string, name: string) {
+        super(type, name);
 
         this.width = 240;
-        this.height = 120;
-    }
-}
-
-export class LemmaNode extends ParentNode {
-    constructor() {
-        super("Lemma");
-        this.addInput("Prop", new Classic.Input(new PropSocket(), "Prop"));
-        this.addOutput("Proof", new Classic.Output(new ProofSocket(), "Proof"));
+        this.height = 195;
     }
 
     async onCreated(editor: NodeEditor<Schemes>) {
         const input = new InputNode();
-        input.fixedSize = {top : 0, bottom : 0, left : 0, width : 100 };
+        input.fixedSize = {top : 0, bottom : 0, left : 100, width : 100 };
         input.parent = this.id;
-        const target = new TargetNode();
-        target.fixedSize = { top : 0, bottom : 0, right : 0, width : 100 };
+        const target = new OutputNode();
+        target.fixedSize = { top : 0, bottom : 0, right : 100, width : 100 };
         target.parent = this.id;
+        this.inputNode = input;
+        this.outputNode = target;
         await Promise.all([editor.addNode(input), editor.addNode(target)]);
     }
 
-    code(): string {
-      return `have #output,Proof : TEST := {
-#sub
-}`
+    setContext(pgInfo: ProofGraphInfo, ctxId: ContextId){
+        this.contextId = ctxId;
+        const ctxInfo = pgInfo.contexts.find(ctx => ctx.contextId === ctxId)!;
+        this.inputNode.nodeId = ctxInfo.inputNode;
+        this.outputNode.nodeId = ctxInfo.outputNode;
+        this.inputNode.onReceiveInfo(pgInfo);
+        this.outputNode.onReceiveInfo(pgInfo); // They may fail previously
+    }
+}
+
+export class LemmaNode extends ParentNode {
+    isPseudo: boolean = false;
+
+    constructor() {
+        super("Lemma", '引理');
+    }
+
+    onReceiveData(data: LemmaData, pgInfo : ProofGraphInfo) {
+        if (data.subcontext != null) {
+            this.setContext(pgInfo, data.subcontext);
+        }
+    }
+}
+
+export class InvokeNode extends Node {
+    constructor(public name: string, public userName: string) {
+        super('Invoke', userName);
+        this.width = 240;
+        this.height = 120;
+    }
+
+    async onCreated(editor: NodeEditor<Schemes>): Promise<void> {
+        if(this.eventOnNodeDataChange) this.eventOnNodeDataChange({ name: this.name });
     }
 }

@@ -1,0 +1,105 @@
+Content-Length: 134
+
+{
+  "jsonrpc": "2.0",
+  "method": "initialize",
+  "params": {
+    "declName": "test3",
+    "depth": null
+  },
+  "id": 336032
+}
+
+Content-Length: 108
+
+{
+  "jsonrpc": "2.0",
+  "method": "addNode",
+  "params": {
+    "type": "Invoke"
+  },
+  "id": 841504
+}
+
+Content-Length: 172
+
+{
+  "jsonrpc": "2.0",
+  "method": "setNodeData",
+  "params": {
+    "nodeId": "_uniq.14",
+    "data": {
+      "name": "Or.resolve_left"
+    }
+  },
+  "id": 841504
+}
+
+Content-Length: 108
+
+{
+  "jsonrpc": "2.0",
+  "method": "addNode",
+  "params": {
+    "type": "Reduce"
+  },
+  "id": 496773
+}
+
+Content-Length: 190
+
+{
+  "jsonrpc": "2.0",
+  "method": "addConnection",
+  "params": {
+    "frm": {"nodeId": "_uniq.14", "sockId": ""},
+    "to": {"nodeId": "_uniq.15", "sockId": ""}
+  },
+  "id": 496773
+}
+
+Content-Length: 89
+
+{
+  "jsonrpc": "2.0",
+  "method": "processGraph",
+  "params": null,
+  "id": 496773
+}
+
+Content-Length: 192
+
+{
+  "jsonrpc": "2.0",
+  "method": "addConnection",
+  "params": {
+    "frm": {"nodeId": "_uniq.7", "sockId": "np"},
+    "to": {"nodeId": "_uniq.15", "sockId": "3"}
+  },
+  "id": 496773
+}
+
+Content-Length: 193
+
+{
+  "jsonrpc": "2.0",
+  "method": "addConnection",
+  "params": {
+    "frm": {"nodeId": "_uniq.7", "sockId": "hpq"},
+    "to": {"nodeId": "_uniq.15", "sockId": "2"}
+  },
+  "id": 496773
+}
+
+Content-Length: 189
+
+{
+  "jsonrpc": "2.0",
+  "method": "addConnection",
+  "params": {
+    "frm": {"nodeId": "_uniq.15", "sockId": ""},
+    "to": {"nodeId": "_uniq.8", "sockId": ""}
+  },
+  "id": 496773
+}
+

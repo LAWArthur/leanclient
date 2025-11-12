@@ -1,13 +1,20 @@
-import { ApplyNode, InputNode, LemmaNode, ReductionNode, TargetNode } from './basic'
+import { ApplyNode, InputNode, LemmaNode, ReductionNode, OutputNode } from './basic'
 
 export { Node } from './node'
 
-export { NumberNode, AddNode } from "./example"
+export { ReductionNode, LemmaNode, ApplyNode, InputNode, OutputNode as TargetNode, InvokeNode } from "./basic"
 
-export { ReductionNode, LemmaNode, ApplyNode, InputNode, TargetNode } from "./basic"
+export { ForallIntroNode, ExistsElimNode } from "./quantifiers"
+
+export { CasesNode, ByCasesNode } from "./cases"
+
+export { ContraNode, AbsurdNode } from "./contra"
+export { ConstructorNode, SplitAppNode } from "./constructor"
+export { ForallConstructNode, ExistsConstructNode, AppConstNode, SortNode } from "./construct"
+export { RewriteNode, RewriteGoalNode } from "./rewrite"
 
 export const DeductionalNode = [InputNode, ReductionNode,  LemmaNode];
 
-export const AnalyticalNode = [TargetNode, ApplyNode];
+export const AnalyticalNode = [OutputNode, ApplyNode];
 
 export const StartNode = [InputNode]; // What can be determined as the beginning of proof

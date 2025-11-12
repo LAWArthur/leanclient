@@ -1,5 +1,11 @@
 <template>
-  <div class="node" :class="{ selected: data.selected }" :style="nodeStyles()" data-testid="node">
+  <div class="node" :class="{
+    selected: data.selected,
+    valid: data.validity === 'valid',
+    invalid: data.validity === 'invalid',
+    notused: data.validity === 'notUsed',
+    internalerror: data.validity === 'internalError'
+  }" :style="nodeStyles()" data-testid="node" ref="node">
     <div class="title" data-testid="title">{{ data.label }}</div>
     <!-- Outputs-->
     <div class="output" v-for="[key, output] in outputs()" :key="'output' + key + seed" :data-testid="'output-' + key">
@@ -24,9 +30,8 @@
   </div>
 </template>
 
-
 <script lang="js">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
 import { Ref } from 'rete-vue-plugin'
 
 
@@ -45,8 +50,8 @@ export default defineComponent({
   methods: {
     nodeStyles() {
       return {
-        width: Number.isFinite(this.data.width) ? `${this.data.width}px` : '',
-        height: Number.isFinite(this.data.height) ? `${this.data.height}px` : ''
+        width: Number.isFinite(this.data._width) ? `${this.data._width}px` : '',
+        "min-height": Number.isFinite(this.data._height) ? `${this.data._height}px` : ''
         // height: 'auto'
       }
     },
@@ -58,6 +63,15 @@ export default defineComponent({
     },
     outputs() {
       return sortByIndex(Object.entries(this.data.outputs))
+    }
+  },
+  mounted() {
+    this.data.getActualView = () => {
+      const box = this.$refs.node.getBoundingClientRect()
+      return {
+        width: box.width,
+        height: box.height 
+      }
     }
   },
   components: {
@@ -72,6 +86,7 @@ export default defineComponent({
 
 .node {
   background: black;
+  opacity: 0.9;
   border: 2px solid grey;
   border-radius: 10px;
   cursor: pointer;
@@ -82,6 +97,8 @@ export default defineComponent({
   position: relative;
   user-select: none;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     background: #333;
@@ -89,6 +106,22 @@ export default defineComponent({
 
   &.selected {
     border-color: red;
+  }
+
+  &.notused {
+    background: #CCC;
+  }
+
+  &.invalid {
+    background: #ff8c8c;
+  }
+
+  &.valid {
+    background: #8cc5ff
+  }
+
+  &.internalerror {
+    background: #ff0000;
   }
 
   .title {
@@ -138,6 +171,7 @@ export default defineComponent({
 
   .control {
     padding: $socket-margin math.div($socket-size, 2) + $socket-margin;
+    text-align: left;
   }
 }
 </style>

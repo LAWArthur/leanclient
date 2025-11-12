@@ -1,5 +1,5 @@
 <template>
-  <div class="socket" :title="data.name"></div>
+  <div class="socket" :class="{ bad: data.isBad }" :title="data.name"></div>
 </template>
 
 <script>
@@ -30,6 +30,9 @@ $node-width: 180px;
   box-sizing: border-box;
   &:hover {
     border-width: 4px;
+  }
+  &.bad {
+    background: #F00;
   }
   &.multiple {
     border-color: yellow;

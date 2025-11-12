@@ -9,6 +9,7 @@ export abstract class Socket extends ClassicPreset.Socket {
     abstract isCompatibleWith(socket : Socket) : boolean;
     isConnected = false;
     isOptional = false;
+    isBad : boolean = false;
 }
 
 export class TargetSocket extends Socket {

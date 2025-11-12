@@ -1,5 +1,5 @@
 <template>
-  <div class="socket" :class="[{ optional: data.isOptional && !data.isConnected }, ]" :title="data.name"></div>
+  <div class="socket" :class="[{ optional: data.isOptional && !data.isConnected, bad: data.isBad }, ]" :title="data.name"></div>
 </template>
 
 <script>
@@ -38,6 +38,10 @@ $node-width: 180px;
   box-sizing: border-box;
   &.optional {
     border-style: dashed;
+    opacity: 0.6;
+  }
+  &.bad {
+    background: #F00;
     opacity: 0.6;
   }
   &:hover {
