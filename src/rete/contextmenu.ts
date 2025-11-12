@@ -86,7 +86,7 @@ export const contextMenu = new ContextMenuPlugin({
             ],
             ["双蕴含",
                 [
-                    ["引入", () => new InvokeNode("Iff.intro", "↔引入")],
+                    ["引入", () => new AppConstNode("Iff.intro", "↔引入")],
                     ["等值式", () => new InvokeNode("Decidable.iff_iff_and_or_not_and_not", "↔等值式")]
                 ]
             ],
