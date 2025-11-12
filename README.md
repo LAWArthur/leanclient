@@ -41,9 +41,9 @@ The server port can be set manually through environment variable `PORT`.
 
 ## Tutorials
 
-[快速入门](gettingstarted.md)
+[快速入门](https://github.com/LAWArthur/leanclient/wiki/Getting-Started)
 
-[Lean 依值类型论](tutorials.md)
+[Lean 依值类型论](https://github.com/LAWArthur/leanclient/wiki/Tutorials)
 
 ## Related Links
 
