@@ -12,7 +12,7 @@ Supported platform: Windows
 
 ### Prebuilt binaries
 
-[Download here]()
+[Download here](https://github.com/LAWArthur/leanclient/releases/latest)
 
 ### Build from source
 
@@ -39,4 +39,8 @@ Double click on `leanclient.exe` in the distribution directory to start the serv
 
 The server port can be set manually through environment variable `PORT`.
 
-### Tutorials
+## Tutorials
+
+## Related Links
+
+[Lean Theorem Prover](https://lean-lang.org/)
