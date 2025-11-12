@@ -41,6 +41,10 @@ The server port can be set manually through environment variable `PORT`.
 
 ## Tutorials
 
+[快速入门](gettingstarted.md)
+
+[Lean 依值类型论](tutorials.md)
+
 ## Related Links
 
 [Lean Theorem Prover](https://lean-lang.org/)
